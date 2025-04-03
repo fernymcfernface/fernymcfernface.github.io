@@ -1,0 +1,84 @@
+Let us now go about finding NP-complete problems. The first problem shown to be NP-complete is a problem in Boolean algebra known as the satisfiability problem, proven by Stephen Cook in 1971. Before we explore the proof, we give some terminology.
+
+\subsection{Boolean algebra}
+
+\begin{definition}
+    A variable $u$ is a \textbf{Boolean variable} if $u \in \{\text{T},\text{F}\}$\footnote{Here T = True, F = False}. The \textbf{complement} of $u$, denoted $\overline{u}$, is defined by
+    \begin{equation*}
+        \overline{u} =
+        \begin{cases}
+            \text{F if $u=\text{T}$}\\
+            \text{T if $u=\text{F}$}
+        \end{cases}
+    \end{equation*}
+\end{definition}
+
+\begin{definition}
+    Let $U = \{u_1,u_2,\dots,u_m\}$ be a set of boolean variables. Then,
+
+    \begin{itemize}
+        \item A \textbf{clause} over $U$ is a set created by choosing at most one element from the sets \newline $\{u_1,\overline{u_1}\},\{u_2,\overline{u_2}\},\dots\{u_m,\overline{u_m}\}$,
+
+        \item A \textbf{truth assignment} is a function $t:U \to \{T,F\}$,
+
+        \item A clause is \textbf{satisfied} by a truth assignment if, under the truth assignment given, at least one member of the clause is True. A collection $C$ of clauses over $U$ (in Conjunctive Normal Form) is \textbf{satisfiable} if there exists some truth assignment such that each element of $C$ is satisfied under that truth assignment.
+    \end{itemize}
+\end{definition}
+
+\begin{example}
+    Consider the set of boolean variables $\{u_1,u_2\}$. The clause $\{u_1,\overline{u_2}\}$ can be satisfied by any truth assignment such that \textit{either} of $t(u_1)=T$, $t(u_2) = F$ hold.\\
+
+    Now consider the set of clauses $\{\{u_1,\overline{u_2}\},\{\overline{u_1},u_2\}\}$. This is satisfiable and can be satisfied by $t(u_1) = t(u_2) = T$. On the other hand, the collection $\{\{u_1,\overline{u_2}\},\{u_1,u_2\},\{\overline{u_2}\}\}$ cannot be satisfied by any truth assignment and so is unsatisfiable.
+\end{example}
+
+\subsection{The satisfiability problem}
+We now turn to the satisfiablity decision problem, and Cook's seminal proof.
+
+\decisionproblem{Satisfiability (Sat)}{A set $U$ of boolean variables and a collection $C$ of clauses over $U$}{Is there a satisfying truth assignment for $C$?}
+
+%\medskip
+
+The theorem is now given.
+
+\begin{theorem}
+    (\cite{CookStephenA.1971CoPM}) \textsc{Satisfiability} is NP-complete.
+\end{theorem}
+
+\begin{proof}
+    We give a sketch proof based on (\cite{GareyMichaelR1979Cai:}). First we acknowledge that $\text{\textsc{Sat}} \in \mathcal{NP}$, as given a truth assignment that it satisfies $C$ in polynomial time. Thus our first requirement is met.
+
+    For the second requirement, we consider the set of languages $L_{\textsc{Sat}}$ which are represented by \textsc{Sat}. We need to show that for all languages $L \in \mathcal{NP}$, $L \propto L_{\text{\textsc{Sat}}}$. As there are an infinite number of languages in $\mathcal{NP}$, we do not create a transition function between the languages. Instead we inspect a polynomial time program in a NDTM that recognises them, as these will have certain distinguishing features. This gives a proof that acts simultaneously for all languages $L \in \mathcal{NP}$.
+
+    Consider a polynomial time NDTM program $M = (\Gamma,Q,\delta)$ with alphabet $\Sigma$ which recognises an arbitrary language $L$ in polynomial time. That is, for any computation of $x \in L$ with $|x| = n$, there exists some polynomial $p$ such that $T_M(n) < p(n)$. Denote the polynomial transformation we construct by $f_L$, and instead of creating a polynomial transformation from $L$ to $L_{\text{\textsc{Sat}}}$ we create a mapping from $\Gamma$ to instances of \textsc{Sat}. This has the property that for all instances $x \in \Sigma^*$, $x \in L$ if and only if $f_L(x)$ has a satisfying truth assignment.
+
+    If an instance $x \in \Sigma^*$ is accepted by $M$, then there must exist an accepting computation such that the number of steps in the checking stage are bounded by $p(n)$. In particular, we must only utilise the tape squares $-p(n)$ to $(p(n)$. Hence, we can describe the NDTM at time $0 \leq t \leq p(n)$ by:
+
+    \begin{itemize}
+        \item The contents of the tape squares;
+        \item The state of $M$;
+        \item The position of the read-write head.
+    \end{itemize}
+
+    Since there are a finite number of these, we can assign them to be boolean variables, for which we call the variable set $U$. Label $Q = \{q_0,q_1= q_Y, q_2 = q_N, q_3, \cdots , q_r\}$ where $r = |Q| -1$, and label $\Gamma = \{s_0 = b,s_1,\cdots,s_v\}$ where $v = |\Gamma| - 1$. Below is a table of the description of the variables.
+
+    \input{Sections/Cooks Theorem tables/Variables table 1}
+    
+    When $M$ computes $x$, it induces a truth assignment on the variables. The construction of $f_L$ is such that an accepting computation on $x$ in polynomial time will return a truth assignment that satisfies $U$. Given this construction, we then have
+    \begin{align*}
+        x \in L &\iff \text{there is an accepting computation of $M$ on $x$}\\
+        &\iff \text{there is an accepting computation of $M$ on $x$ that takes $p(n)$ or fewer steps}\\
+        &\iff \text{there is a satisfying truth assignment for the collection of clauses in $f_L(x)$.}
+    \end{align*}
+
+    This means that $f_L$ satisfies one of the two requirements required of a polynomial transformation. We now complete our description of $f_L$.
+
+    \input{Sections/Cooks Theorem tables/Clause groups}
+
+    The table of clause groups clearly specifies a truth assignment such that if $x \in L$, then this truth assignment is satisfied. However, if $x \notin L$, then either it must be rejecting or does not halt (in which case clauses $G_5$ is violated) which does not satisfy the truth assignment. Hence $x \in L$ if and only if there is some satisfying truth assignment for the clause group given above.
+
+    What is now left to show is the for a fixed language $L$, $f_L(x)$ can be constructed in time bounded by some polynomial function of $n = |x|$. But the choice of our clauses was arbitrary, so we can adjust the clause group for our satisfying computation.
+ 
+    Our final task is to show that the time taken to encode \textsc{Sat} will be bounded above by some polynomial. This is easily done; the collection of clauses is polynomial on $n$, as is the number of possible sets of clauses, so the size of encoding is also polynomial on $n$ as desired.
+
+    Hence, for any language $L \in \mathcal{NP}$, $f_L$ acts as a polynomial transformation from $L$ to $L_{\textsc{Sat}}$. It follows that \textsc{Sat} is NP-complete.
+\end{proof}

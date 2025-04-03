@@ -1,0 +1,20 @@
+\begin{table}[h]
+    \begin{center}
+    \begin{tabular}{|c|c|}\hline
+       Clause group & Restriction imposed \\ \hline
+        $G_1$ & \multirow{1}{20em}{At time $t$, $M$ is in exactly 1 state} \\
+         
+        $G_2$ & \multirow{2}{20em}{At time $t$, the read-write head is scanning exactly one tape square}\\ &  \\
+        
+        $G_3$ & \multirow{2}{20em}{At time $t$, each tape square contains exactly one symbol from $\Gamma$}\\ &  \\
+        
+        $G_4$ & \multirow{2}{20em}{At time $0$, the computation is in the initial configuration of its checking stage for input $x$}\\ & \\
+        
+        $G_5$ & \multirow{2}{20em}{By time $p(n)$, $M$ has entered state $q_Y$ and hence has accepted $x$}\\ & \\
+        
+        $G_6$ & \multirow{3}{20em}{For each time $0 \leq t \leq p(n)$, the configuration of $M$ at time $t+1$ follows a single application of the transition function of $M$ at time $t$.}\\ & \\ & \\ \hline
+    \end{tabular}        
+    \end{center}
+    \caption{A table of clause groups and their meanings.}
+    \label{figClauseGroups}
+\end{table}

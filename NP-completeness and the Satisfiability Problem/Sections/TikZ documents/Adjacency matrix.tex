@@ -1,0 +1,28 @@
+\begin{figure}
+    \centering
+    \parbox{2in}{
+    \begin{equation*}
+    \begin{pmatrix}
+        0 & 1 & 0 & 1 \\
+        1 & 0 & 1 & 1 \\
+        0 & 1 & 0 & 0 \\
+        1 & 1 & 0 & 0 \\
+    \end{pmatrix}
+    \end{equation*}}
+    \begin{minipage}{2in}
+    \begin{tikzpicture}[baseline(10.base), thick, main/.style = {draw,circle}]
+
+    \node (1) [circle,draw] at (0,2) {$v_1$};
+    \node (2) [circle,draw] at (2,2) {$v_2$};
+    \node (3) [circle,draw] at (2,0) {$v_3$};
+    \node (4) [circle,draw] at (0,0) {$v_4$};
+
+    \graph{(1) -- (2) -- (4) -- (1)};
+    \graph{(2) -- (3)};
+    \end{tikzpicture}
+    \end{minipage}
+
+    
+    \caption{An adjacency matrix and its corresponding graph.}
+    \label{fig:AdjacencyMatrix}
+\end{figure}

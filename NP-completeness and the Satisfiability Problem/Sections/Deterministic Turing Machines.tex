@@ -1,0 +1,114 @@
+The first computational models created by computer scientists come from Automata Theory, which is the study of abstract automata or `machines' (\cite{HopcroftJohnE.2014Itat}). In the 1930s Alan Turing and Alonzo Church studied a particular type of automata known as \textbf{finite-state automata} and built on this with the development of the \textbf{Turing Machine}. We utilise this model due to its flexibility and versatility. There are many variations on the model, but we begin with the one-tape \textbf{Deterministic Turing Machine} (DTM).
+
+The DTM contains a \textbf{finite state control}, a \textbf{read-write head}, and an infinite sequence of \textbf{tape squares}, labelled \(\dots,-2,-1,0,1,2,\dots\). By convention we always set the start of our input at position 1, which we refer to as the \textbf{initialisation} of our Turing Machine.
+
+\input{Sections/TikZ documents/TuringMachineExample}
+
+There is also a set number of states that the DTM can be in, which influence the action the finite state control takes. When the tape head reads a cell, based on the value of the cell and the state it will do three things:
+
+\begin{itemize}
+    \item Rewrite the item on the tape head;
+    \item Choose to move the tape forwards or backwards one cell, or stay on the same cell;
+    \item Optionally change the state of the DTM.
+\end{itemize}
+
+\noindent We now provide a formal definition.
+
+\begin{definition}
+    (\cite{GareyMichaelR1979Cai:}) A \textbf{program} in a one-tape Deterministic Turing Machine (DTM) is a tuple \((\Gamma,Q,\delta)\) such that:
+    \begin{itemize}
+        \item \(\Gamma\) is a finite set of tape symbols, including a subset $\Sigma \subset \Gamma$ \textbf{input symbols} and a \textbf{blank symbol} $b \in \Gamma \setminus \Sigma$;
+        \item \(Q\) is a finite set of states, including a unique start-state \(q_0\) and two unique halt-states \(q_Y\) and \(q_N\);
+        \item \(\delta\) represents a transition function \(\delta:Q \setminus \{q_Y,q_N\}
+        \times \Gamma \rightarrow Q \times \Gamma \times \{-1,0 +1\}\).
+    \end{itemize}
+    In our set of tape symbols, the subset $\Sigma$ is referred to as an \textbf{alphabet}.
+\end{definition}
+
+For the sake of brevity, in this report we refer to a program in a one-tape DTM as a DTM. Now that we have defined a program, what is left is to consider the possible set of inputs into a program:
+
+\begin{definition}
+    Consider an alphabet \(\Sigma = \{\sigma_1,\sigma_2,\dots,\sigma_n\}\). We denote \(\Sigma^*\) to be the set of all finite strings of symbols from \(\Sigma\). A \textbf{language} is a subset \(L \subseteq \Sigma^*\) and an \textbf{instance} or \textbf{input} is an element $x \in \Sigma^*$.
+\end{definition}
+
+\begin{remark}
+    By convention the string of length $0$ is given by $\epsilon$.
+\end{remark}
+As an example, for the binary alphabet \(\{0,1\}\) we have \[\{0,1\}^* = \{\epsilon, 0, 1, 00, 01, 10, 11, 000, 001, 010, 011, 100, \dots\}.\]
+
+\subsubsection{Encodings}\label{sec:Encodings}
+The physical manifestation of a Turing Machine tends to take the form of either an electronic computer or a physical tape passing through a tape head. In either case, the tape head can only read up to two pieces of information. In the case of an electronic TM, either there is electricity passing through the tape head or no electricity. In the case of a paper tape, there is either a punched hole or no punched hole. Therefore, for our Turing Machine model to be faithful to a real-world model, we implement it using the alphabet $\{0,1\}$.
+
+There are many different items that we will want to represent in our DTM, which we need to represent through this alphabet; we use a process called \textbf{encoding} to represent them.
+
+To represent a number, we note that we can use a representation known as \textbf{binary}. Typically we use a system called \textbf{base 10}, which means that a number like $354$ can be also written as $3 \cdot 10^2+5 \cdot 10^1 + 4 \cdot 10^0$. We can represent a number in base 2, or \textbf{binary}, in a similar way:
+\begin{align*}
+    9 \text{  in base } 10 &= 1 \cdot 2^3 + 0 \cdot 2^2 + 0 \cdot 2^1 + 1 \cdot 2^0\\
+    &=1001 \text{ in base } 2.
+\end{align*}
+
+We can also represent graphs in binary; for an undirected graph, we can label the vertices with some indexing set and create a matrix such that
+\begin{align*}
+    a_{i,j} =
+    \begin{cases}
+        1 \text{ if there is an edge between $v_i$ and $v_j$}\\
+        0 \text{ otherwise}
+    \end{cases}
+\end{align*}
+
+Such a matrix is called an \textbf{adjacency matrix}. We then input it row by row into the TM, which acts as an encoding for our graph, as shown in Figure \ref{fig:AdjacencyMatrix}.
+
+\input{Sections/TikZ documents/Adjacency matrix}
+
+\subsubsection{Decision problems}
+One use case of the Turing Machine is to solve problems.
+
+\begin{definition}
+    A decision problem, $\Pi$, consists of a set $D_{\Pi}$ of \textbf{instances} and a subset $Y_\Pi \subseteq D_\Pi$ of \textbf{yes-instances.}
+\end{definition}
+
+A common way to give decision problems (and how they will be referred to in this report) is in the \textbf{instance-problem} form. Here is an example decision problem:
+
+\decisionproblem{Divisibility by four}{A natural number $x$.}{Is $x$ divisible by $4$?}
+
+\begin{remark}\label{remark:DecisionProblem-Language}
+    Any decision problem describes a language, as the set of yes-instances (given by instances for which the answer to the problem is `yes') is a subset of all possible instances in $\Pi$.
+\end{remark}
+
+\begin{definition} \label{def:Computation}
+    Let $\Sigma$ be the alphabet for a program $M$ in a Deterministic Turing Machine, and consider an instance \(x \in \Sigma^*\). We say that $M$ \textbf{halts, computes $x$} or \textbf{decides $x$} if there exists $T \in \mathbb{N}$ such that for all $t\geq T$, the state, location and contents of all cells of $M$ after $t$ steps is equal to that after $t+1$ steps. Furthermore, we say that
+    \begin{itemize}
+        \item $M$ \textbf{accepts} $x$ if $M$ halts on state $q_Y$;
+        \item $M$ \textbf{rejects} $x$ if $M$ halts on state $q_N$;
+        \item The language $L_M$ \textbf{recognised} by $M$ is given by the set \[L_M = \{x \in \Sigma^*: M \text{ accepts } x\}\]
+    \end{itemize}
+    
+\end{definition}
+
+\begin{example}
+    We can compute the decision problem \textsc{Divisibility by four} using a Turing Machine.
+    
+    Set \(\Sigma = \{0,1\}\) and let \(Q = \{q_0,q_1,q_2,q_Y,q_N\}\). Lastly, set our transition function as below:
+
+    \begin{table}[h]
+    \centering
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            & \(0\) & \(1\) & \(b\) \\
+            \hline
+            \(q_0\) & \((q_0,0,+1)\) & \((q_0,b,+1)\) & \((q_1,1,-1)\) \\
+            \hline
+            \(q_1\) & \((q_2,0,-1)\) & \((q_N, 1, +1)\) & \((q_N,b,+1)\) \\
+            \hline
+            \(q_2\) & \((q_Y,0,+1)\) & \((q_N,1,+1)\) & \((q_N,b,+1)\)\\
+            \hline
+        \end{tabular}\\
+        \caption{A table of the transition function for $M$. An output from the transition function is taken by taking the input symbol along the top row and the current state along the left hand column and reading the corresponding cell.}
+        \label{table:DivisibilityByFourTransitionTable}
+    \end{table}
+    Consider the number $28$. We know that $28$ is equal to $7$ times $4$, so it should return a successful result. Indeed, it does:
+
+    \input{Sections/TikZ documents/DivisibilityByFour}
+
+    By inspection of the transition function, it can be seen that the program recognises the language \[L_M = \{x \in \{0,1\}^*:\text{The two rightmost symbols of $x$ are both 0}\} \text{.}\]
+\end{example}
