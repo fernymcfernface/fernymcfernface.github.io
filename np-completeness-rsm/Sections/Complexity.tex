@@ -1,0 +1,104 @@
+We have now formalised our concept of computation. Before we continue, let us motivate the rest of this report with a proposition:
+
+\begin{proposition}\label{Prop:Prop3.1}
+    For any $a,b>1$, there exists an integer $N$ such that for all $n > N$,
+    \[
+    a^n > n^b \text{.}
+    \]
+\end{proposition}
+
+\input{Sections/TikZ documents/Exp Complexity}
+
+It is important for the programs in Turing Machines we design to be as fast as possible. The assertion arising from Proposition \ref{Prop:Prop3.1} means that if a program in a DTM were to take a polynomial amount of time, it will eventually be much faster than a program that takes an exponential amount of time. The area of study that explores how fast a language can be computed is referred to as \textbf{Complexity Theory}, which we spend the rest of this report formalising.
+
+\begin{definition}
+    Let $M$ be a program in a DTM, and let $x$ be an instance that halts in $M$. Denote the \textbf{time used} to compute an instance $x$ as $t_M(x)$, defined to be the number of steps $M$ takes to compute $x$. If all instances $x \in \Sigma^*$ in $M$ halt, the \textbf{time complexity} of $M$ for input length $n$ is defined by
+    \begin{equation*}
+        T_M(n) = \max\{t_M(x):x \in \Sigma^* \text{ and } |x| = n\}\text{.}
+    \end{equation*}
+\end{definition}
+
+\begin{definition}\label{def:DTIME}
+    $(\mathbf{DTIME})$ A language $L$ is in $\mathbf{DTIME}(T(n))$ if there exists a DTM $M$ that runs with time $c \cdot T_M(n)$ for some constant $c>0$ and computes all instances $x \in L$.
+\end{definition}
+
+\begin{remark}
+    Remark \ref{remark:DecisionProblem-Language} notes that a decision problem can be used to describe a language. We refer to a decision problem $\Pi$ as being in a complexity class if the language it describes is in that complexity class.
+\end{remark}
+
+Intuitively, $\mathbf{DTIME}$ exists with the aim to classify a complexity class. We motivate this with some examples:
+
+\newpage
+\begin{example}
+    Here are some examples of time complexities and their respective $\mathbf{DTIME}$ classes. For all of these, $L$ is a language, with all instances $x \in L$ having size $|n|$.
+    \begin{itemize}
+        \item If $T_M(n) = n^2 + \log n +1$, $L \in \mathbf{DTIME}(n^2)$.
+        \item If $T_M(n) = 2^n + n^2$, $L \in \mathbf{DTIME}(2^n)$.
+        \item $\mathbf{DTIME}(n^i) \subseteq \mathbf{DTIME}(n^{i+j})$ for all $i,j > 0$.
+    \end{itemize} 
+\end{example}
+
+\begin{remark}
+    In Definition \ref{def:DTIME} it should be noted that there is no requirement that the most efficient computation acts in the time specified - only that there exists a DTM that acts in that time. We can therefore have any language in one $\mathbf{DTIME}$ class also be in a slower $\mathbf{DTIME}$ class by adding a large number of dummy steps to the end of a computation on an instance.
+\end{remark}
+
+It is important to note at this point the assertion that $\mathbf{DTIME}$ acts as a classifier for all DTMs independent of the number of tapes in the DTM. The following theorem shows that this must be the case.
+
+\begin{theorem}
+    (\cite{PapadimitriouChristosH1994Cc/C})
+    (Linear speedup theorem) If the time complexity for a $k$-tape DTM that computes a language $L$ is given by $T(n)$, then the time complexity for a one-tape DTM that also computes $L$ is at most \[\frac{T(n)}{c} +2n + 3\] where $c$ is a constant.
+\end{theorem}
+
+Now that we know all computations on DTMs have a well defined time complexity, we can begin to classify languages by generalised time complexity.
+
+\begin{definition}
+    (The class $\mathcal{P}$) $\mathcal{P} = \bigcup_{c \geq 0} \mathbf{DTIME}(n^c)$.
+\end{definition}
+
+This stands for \textbf{Polynomial deterministic time} and includes the set of any inputs that take a polynomial amount of time to run on a program in a DTM. We say that a decision problem $\Pi$ is \textbf{tractable} or \textbf{efficient} if all instances in $\Pi$ are also in $\mathcal{P}$ and \textbf{intractable} if not.
+
+\begin{example}
+    Consider the following decision problem:
+    
+    \begin{decisionproblem}{Complete graph}{A graph $G$}{Is $G$ complete?}
+    \end{decisionproblem}
+
+    Recall from Section \ref{sec:Encodings} that we can encode a graph by its adjacency matrix. We design a program in a DTM that checks, given a graph $G=(V,E)$, if for any $i \neq j$, $a_{i,j} = 1$. This takes $|V|^2 - |V|$ steps (since there are that many entries to check), and so \textsc{Complete graph} is in $\mathcal{P}$.
+\end{example}
+
+\subsection{The class $\mathcal{NP}$}
+We have thus far only looked at determinism. We now turn to nondeterministic TMs and look at polynomially bound computations on them.
+
+\begin{definition}
+    Let an NDTM program $M$ with alphabet $\Gamma$ be a decider, and let $x \in \Gamma^*$ be an instance. Denote the time used to compute an instance as $t_M(x)$, defined to be the maximum number of steps that $M$ uses on any branch to compute $x$. The time complexity of $M$ for input length $n$ is defined by \[T_M(n) = \max\{t_M(x): x \in \Gamma^* \text{ and } |x| = n\} \text {.}\]
+\end{definition}
+
+\begin{definition}
+    (The class $\mathbf{NTIME}$) A language $L$ is in $\mathbf{NTIME}(T(n))$ if there exists an NDTM that runs with time $c \cdot T(n)$ for some constant $c>0$ and computes $L$.
+\end{definition}
+
+\begin{definition}
+    (The class $\mathcal{NP}$) $\mathcal{NP} = \bigcup_{c \geq 0} \mathbf{NTIME}(T(n))$.
+\end{definition}
+
+Recalling Theorem \ref{thm: NDTM DTM equality}, if an NDTM recognises a language then so must a DTM; our method for this was by finding an arbitrary branch that accepts the instance. This is incredibly inefficient (\cite{SipserMichael2013Ittt}) and a language in $\mathcal{NP}$ cannot be recognised efficiently with a DTM through this method. Instead of recognising a language, if we instead require a program in a DTM to accept an instance in polynomial time, this is possible simply by following the branch that accepts an instance. The DTM that follows this branch is known as a \textbf{decider}.
+
+\begin{proposition}
+    A language $L$ is in $\mathcal{NP}$ if and only if for some input $x \in L$ (with $|x| = n$) there exists some polynomial $p$ and some DTM $M$ that accepts $x$ with $t_M(x) < p(n)$.
+\end{proposition}
+
+\begin{proof}
+    $(\implies)$ Consider some language $l \in \mathcal{NP}$. A verifier for $x \in l$ can be given by following the branch of the computation that accepts it; this takes a polynomial number of steps and we are done.
+
+    ($\impliedby$) Consider a language $l$ such that for all $x \in l$, $x$ can be computed in polynomial time by some program in a DTM. Label these inputs and programs $x_i$ and $M_i$ respectively. Set a transition relation for an NDTM to encompass these transition functions, which accepts all $x \in l$ in a polynomial amount of time, and hence $l \in \mathcal{NP}$.
+\end{proof}
+
+What is left for us is to consider what languages are in $\mathcal{P}$ and what languages are in $\mathcal{NP}$. There is one such relationship that we know of:
+
+
+\begin{corollary} \label{corollary: P subset NP}
+    $\mathcal{P} \subseteq \mathcal{NP}$.
+\end{corollary}
+\begin{proof}
+    If a language $L \in \mathcal{P}$, then it must have a polynomial time DTM that computes all inputs in $L$. Since this runs in polynomial time, we implement it as our verifier which will correctly show the same result.
+\end{proof}

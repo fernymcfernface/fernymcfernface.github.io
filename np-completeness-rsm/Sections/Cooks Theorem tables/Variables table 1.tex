@@ -1,0 +1,19 @@
+\begin{table}[h]
+    \begin{center}
+    \begin{tabular}{|c|c|c|}\hline
+        Variable & Range & Meaning \\ \hline
+        \multirow{2}{5em}{$Q[i,k]$} & $0 \leq t \leq p(n)$ & \multirow{2}{20em}{At time $t$, $M$ is in stage $q_k$.}\\
+        & $0 \leq k \leq r$ & \\ \hline
+        
+        \multirow{2}{5em}{$H[i,j]$} & $0 \leq t \leq p(n)$ & \multirow{2}{20em}{At time $t$, the read-write head is scanning tape square $j$.} \\
+        & -p(n) \leq j \leq p(n)+1 & \\ \hline
+
+        \multirow{3}{5em}{$S[i,j,k]$} & $0 \leq  t \leq p(n)$ & \multirow{3}{20em}{At time $t$, the contents of tape square $j$ is symbol $s_k$.} \\
+        & $-p(n) \leq j \leq p(n)+1$ & \\
+        & $0 \leq k \leq v$ & \\ \hline
+    \end{tabular}
+    \end{center}
+    \caption{A table of the variables and their meanings.}
+    \label{table:Variables}
+\end{table}
+
