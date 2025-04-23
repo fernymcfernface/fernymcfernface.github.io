@@ -1,0 +1,306 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+   <meta charset="utf-8"/>
+  <main style="width: 40em;margin:auto">
+  <title>
+   A Better Way to Understand Continuity
+  </title>
+
+  <style>
+   body,table tr{background-color:#fff}table tr td,table tr th{border:1px solid #ccc;text-align:left;padding:6px 13px;margin:0}pre code,table,table tr{padding:0}hr,table tr th{font-weight:700}h1{font-size:2em;margin:.67em 0;text-align:center}h2{font-size:1.75em}h3{font-size:1.5em}h4{font-size:1.25em}h1,h2,h3,h4,h5,h6{font-weight:700;position:relative;margin-top:15px;margin-bottom:15px;line-height:1.1}h1,h2{border-bottom:1px solid #eee}hr{height:0;margin:15px 0;overflow:hidden;border:0;border-bottom:1px solid #ddd}a{color:#4183C4}a.absent{color:#c00}ol,ul{padding-left:15px;margin-left:5px}ol{list-style-type:lower-roman}table tr{border-top:1px solid #ccc;margin:0}table tr:nth-child(2n){background-color:#aaa}table tr td :first-child,table tr th :first-child{margin-top:0}table tr td:last-child,table tr th :last-child{margin-bottom:0}img{max-width:100%}blockquote{padding:0 15px;border-left:4px solid #ccc}code,tt{margin:0 2px;padding:0 5px;white-space:nowrap;border:1px solid #eaeaea;background-color:#f8f8f8;border-radius:3px}pre code{margin:0;white-space:pre;border:none}.highlight pre,pre{background-color:#f8f8f8;border:1px solid #ccc;font-size:13px;line-height:19px;overflow:auto;padding:6px 10px;border-radius:3px}
+  </style>
+ </head>
+
+ <body>
+
+   <center> <a href="https://imiqbal.com/">I M Iqbal</a> <- webring -> <a href="https://petitemare.github.io//">Trinity</a> </center>        
+   <center><a href="/index.html">Back to my homepage</a></center>
+
+
+  <h1>A Better Way to Understand Continuity</h1>
+  <i>24 April 2025</i>
+  <p>
+   I took my first topology module this year and have enjoyed it quite a lot. That being said, one of the first things that caught me unawares was how topologists define continuity. Since topology is all about properties invariant under bijective continuous maps, I wanted to inspect this more thoroughly.
+  </p>
+  <p>
+   Specifically, topologists use the following definition:
+   <strong>
+    A function $f:X \to Y$ is continuous if for all open sets in $Y$, its preimage $f^{-1}(x)$ is also open.
+   </strong>
+  </p>
+  <p>
+   This was quite an odd way of looking at it - why do we not just use the same definition that we have used in previous real analysis courses? Learning why this made sense helped me understand far more deeply what topology is about, and how topological invariants relate with one another.
+  </p>
+  <h2>
+   The first principles
+  </h2>
+  <p>
+   Before we do anything else, let's remind ourselves of what a continuous function is as the way we would have been taught in a real analysis class:
+  </p>
+  <p>
+   <strong>
+    A function $f:X \to Y$ is continuous if for all points $a \in X$, $\lim_{x \to a}f(x) = f(a)$.
+   </strong>
+  </p>
+  <p>
+   This definition is fine (it's certainly well defined for real functions), but a limit-based definition runs into a few issues:
+  </p>
+  <p>
+   <strong>
+    It's only well-defined for one-dimensional real functions of real variables.
+   </strong>
+   Even if we ignore the existence of some
+   <a href="https://en.wikipedia.org/wiki/Cofiniteness#Cofinite_topology">
+    weird topological spaces
+   </a>
+   , we still need to redefine continuity on multivariable functions, or for complex analysis.
+  </p>
+  <p>
+   <strong>
+    In topology, limits are not unique
+   </strong>
+   . Some topological spaces have sequences that do not converge, some converge on one point, some converge on more than one point and some converge on the entire domain. A clear cut solution for continuity cannot rely on a limit-based definition.
+  </p>
+  <p>
+   <strong>
+    All in all, it makes theorem proving using continuity far more difficult than it should be.
+   </strong>
+   This is a problem, since the aim of topology is to find invariant properties under continuity.
+  </p>
+  <p>
+   It is clear that this definition does not suffice for our purposes. But how do we find such a definition?
+  </p>
+  <h2>
+   Introducing: the open ball
+  </h2>
+  <p>
+   One thing that every topological space has is open subsets; in fact, the set of open subsets of a set is how we describe the topology on that set. This gives us an idea for how we can create a new definition. Here are some examples of sets and metrics we describe on them:
+   <sup id="fnref:1">
+    <a class="footnote-ref" href="#fn:1">
+     1
+    </a>
+   </sup>
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Set
+     </th>
+     <th>
+      Example metric
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      $\mathbb{R}^n$
+     </td>
+     <td>
+      Euclidean distance: $|x-y|$
+     </td>
+    </tr>
+    <tr>
+     <td>
+      Vector space
+     </td>
+     <td>
+      $|x-y|$
+      <sup id="fnref:2">
+       <a class="footnote-ref" href="#fn:2">
+        2
+       </a>
+      </sup>
+     </td>
+    </tr>
+    <tr>
+     <td>
+      Graph
+     </td>
+     <td>
+      Shortest route between two vertices
+     </td>
+    </tr>
+    <tr>
+     <td>
+      Continuous bounded functions
+     </td>
+     <td>
+      The supremum metric: $\sup|f(x) - g(x)|$
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <p>
+   From now on we will work in $\mathbb{R}$, though the reader is welcome to apply these techniques to definitions they have learnt in a multivariable or complex analysis class. To derive our new definition, we introduce the following set:
+  </p>
+  <p>
+   $$
+B_{\epsilon}(a) :=  {x \in \mathbb{R}: |x-a| &lt; \epsilon},
+$$
+  </p>
+  <p>
+   where $\epsilon &gt; 0$. This is known as the
+   <em>
+    open ball of radius $\epsilon$ centred at $a$
+   </em>
+   (or an open interval), and will be key to our derivation. In particular, we remark that any open set (in $\mathbb{R}$ or otherwise) is made up of a composition of open balls.
+   <sup id="fnref:3">
+    <a class="footnote-ref" href="#fn:3">
+     3
+    </a>
+   </sup>
+   In particular:
+  </p>
+  <ul>
+   <li>
+    $\emptyset$ is the union of no open balls,
+   </li>
+   <li>
+    $\mathbb{R}$ is the union of all open balls.
+   </li>
+  </ul>
+  <p>
+   We now prove that a function is continuous. We recall the $\epsilon-\delta$ definition of continuity:
+  </p>
+  <p>
+   $$
+f:X \subseteq \mathbb{R} \to \mathbb{R} \text{ continuous} \iff \forall a \in X \forall \epsilon &gt; 0 \exists \delta &gt;0:|x-a| &lt; \delta \implies |f(x)-f(a)| &lt; \epsilon
+   <br/>
+   $$
+  </p>
+  <p>
+   Or equivalently,
+  </p>
+  <p>
+   $$
+f:X \subseteq \mathbb{R} \to \mathbb{R} \text{ continuous} \iff \forall a \in X \forall \epsilon &gt; 0 \exists \delta &gt; 0: x \in B_{\delta}(a) \implies f(x) \in B_{\epsilon}(f(a))
+$$
+  </p>
+  <p>
+   However, just applying the definition is not enough to end up with the definition we held at the start. To find this, we go through the process of how we may prove a function is continuous at a point - say, $\sin(x)$:
+  </p>
+  <blockquote>
+   <p>
+    Assuming $a \in [-\pi,\pi]$, take some ball $B_{\epsilon}(\sin(a))$. This is given by $(\sin(a) - \epsilon,\sin(a) + \epsilon)$. Taking care to make sure the inverse is well defined, we have the local preimage map
+$$(\max{\sin^{-1}(\sin(a)-\epsilon),-1},\min{\sin^{-1}(\sin(a) + \epsilon)})$$
+which fulfills the requirement.
+   </p>
+  </blockquote>
+  <p>
+   This is the
+   <strong>
+    maximal
+   </strong>
+   value of $\delta$ - so any value of $\delta$ between 0 and the value given will work. What is important to remember is that we determined the open ball in the domain based on the ball in the codomain, which is what makes the forward implication work.
+  </p>
+  <p>
+   Note here the use of the word
+   <em>
+    local
+   </em>
+   when describing the map. This is because while the inverse of $\sin$ maps to $[-\pi,\pi]$, the preimage extends out infinitely:[^5]
+  </p>
+  <p>
+   <img alt="Missed values" src="sin-missed-values.jpg"/>
+  </p>
+  <p>
+   We would like our notion of continuity to capture these missed values. Plus, with a periodic or bounded function like the sine function, this comes as a huge bonus - if we can find some way of extending the definition to all preimages, we can simply test that the solution works locally and check it for the possible open balls within the codomain.
+  </p>
+  <h2>
+   The finishing touches
+  </h2>
+  <p>
+   Recall what I said at the start of the previous section -- that every open set can be made of a union of open balls. Since every open ball in the codomain has a corresponding open ball in the domain, we now take their union, which we now see is also an open set:
+  </p>
+  <p>
+   <img alt="Preimages map" src="preimages-map.png"/>
+  </p>
+  <p>
+   <a href="https://www.desmos.com/calculator/73mu5ktsk5">
+    Feel free to play about with some preimages of $\sin$ here.
+   </a>
+  </p>
+  <p>
+   This preimage has been determined by the codomain. What is left for us to do is:
+  </p>
+  <ul>
+   <li>
+    Show that if $(a,b)$ has some preimage $f^{-1}(a,b)$, that this preimage is open,
+   </li>
+   <li>
+    Generalise this to all open sets in the codomain.
+   </li>
+  </ul>
+  <p>
+   For the first problem, we take any point $x$ in $f^{-1}(a,b)$. Since $f$ is continuous, we can form an open ball around this that maps to some subset of $(a,b)$, and we are done.
+  </p>
+  <p>
+   For the second problem, we recall (for the final time) that an open set is a union of open balls and we are done.
+  </p>
+  <p>
+   If this derivation has gone over your head, I'd still like to show you how much nicer of a method this is than the traditional definition. Consider the function $f:\mathbb{R} \to \mathbb{R}$ given by $f(x) = x^2$. For some $0&lt;a&lt;b$, we can consider the preimage map to be given by 
+$$f^{-1}(a,b) = (-\sqrt{b}, -\sqrt{a}) \cup (\sqrt{a},\sqrt{b}).
+$$
+  </p>
+  <p>
+   Each of these intervals is an open ball, so the whole set is open. If we take $a&lt;b\leq0$, then $f^{-1}(a,b) = \emptyset$, and taking $a&lt;0$ and $b&gt;0$, then $f^{-1}(a,b) = (-\sqrt{b},\sqrt{b})$. Each of these preimages is open, and so the function is continuous. Far easier to prove than the $\epsilon-\delta$ definition.
+  </p>
+  <p>
+   I hope this was an enjoyable read! Feel free to get in touch with me on
+   <a href="https://mathstodon.xyz/@fernymcfernface">
+    Mastodon
+   </a>
+   if you have any questions or you found anything confusing.
+  </p>
+  <div class="footnote">
+   <hr/>
+   <ol>
+    <li id="fn:1">
+     <p>
+      If you want to see some more fun examples of metrics on sets, you can do so
+      <a href="https://en.wikipedia.org/wiki/Metric_space">
+       here
+      </a>
+      .
+      <a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">
+       ↩
+      </a>
+     </p>
+    </li>
+    <li id="fn:2">
+     <p>
+      Recall that $\mathbb{R}^n$ is a vector space, with the basis ${(1,0,\cdots, 0),\cdots(0,\cdots,0,1)}$. This may seem trivial, but it is crucial in areas such as functional analysis and differential topology, as most maps (including the derivative) are
+      <a href="https://en.m.wikipedia.org/wiki/Tangent_space">
+       actually a linear map
+      </a>
+      .
+      <a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">
+       ↩
+      </a>
+     </p>
+    </li>
+    <li id="fn:3">
+      <p>
+       To understand why this is the case, recall that an set is defined as open if for all elements in the set, you can construct some open ball around it.
+       <a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">
+        ↩
+       </a>
+      </p>
+     </li>
+   </ol>
+  </div>
+  <script src="/usr/share/remarkable/media/highlight.min.js">
+  </script>
+  <script>
+   hljs.initHighlightingOnLoad();
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript">
+  </script>
+  <script type="text/javascript">
+   MathJax.Hub.Config({"showProcessingMessages" : false,"messageStyle" : "none","tex2jax": { inlineMath: [ [ "$", "$" ] ] }});
+  </script>
+ </body>
+</html>
